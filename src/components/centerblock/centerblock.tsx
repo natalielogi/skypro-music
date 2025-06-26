@@ -2,7 +2,11 @@ import Link from 'next/link';
 import styles from './centerblock.module.css';
 import cn from 'classnames';
 
-export default function Centerblock() {
+type Props = {
+  pageTitle?: string;
+};
+
+export default function Centerblock({ pageTitle = 'Треки'}: Props) {
   return (
     <div className={styles.centerblock}>
       <div className={styles.centerblock__search}>
@@ -16,7 +20,7 @@ export default function Centerblock() {
           name="search"
         />
       </div>
-      <h2 className={styles.centerblock__h2}>Треки</h2>
+      <h2 className={styles.centerblock__h2}>{pageTitle}</h2>
       <div className={styles.centerblock__filter}>
         <div className={styles.filter__title}>Искать по:</div>
         <div className={styles.filter__button}>исполнителю</div>
@@ -185,7 +189,9 @@ export default function Centerblock() {
                 <div>
                   <Link className={styles.track__titleLink} href="">
                     Run Run
-                    <span className={styles.track__titleSpan}>(feat. AR/CO)</span>
+                    <span className={styles.track__titleSpan}>
+                      (feat. AR/CO)
+                    </span>
                   </Link>
                 </div>
               </div>
