@@ -10,8 +10,8 @@ import Sidebar from '@/components/sidebar/sidebar';
 export default function Home() {
   return (
     <div className={styles.wrapper}>
-      <div className={'container'}>
-        <main className={'main'}>
+      <div className={styles.container}>
+        <main className={styles.main}>
           <Navigation />
           <Centerblock />
           <Sidebar />
