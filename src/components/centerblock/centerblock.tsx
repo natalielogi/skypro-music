@@ -1,5 +1,5 @@
 import styles from './centerblock.module.css';
-import FilterBlock from './filterblock';
+import FilterBlock from '../filter/filterblock';
 import TrackList from './tracklist';
 
 type Props = {
