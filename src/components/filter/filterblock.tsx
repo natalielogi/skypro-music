@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './filterblock.module.css';
 import FilterList from './filterlist';
 import cn from 'classnames';
@@ -9,10 +9,29 @@ const FILTERS = ['исполнителю', 'году выпуска', 'жанр�
 
 export default function FilterBlock({ pageTitle }: { pageTitle: string }) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
 
   const toggleFilter = (filter: string) => {
     setActiveFilter((prev) => (prev === filter ? null : filter));
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setActiveFilter(null);
+      }
+    };
+
+    if (activeFilter) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeFilter]);
 
   return (
     <>
@@ -41,7 +60,7 @@ export default function FilterBlock({ pageTitle }: { pageTitle: string }) {
           >
             {name}
             {activeFilter === name && (
-              <div className={styles.filter__popup}>
+              <div ref={popupRef} className={styles.filter__popup}>
                 <FilterList type={name} />
               </div>
             )}
