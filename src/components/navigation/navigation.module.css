@@ -26,11 +26,20 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .nav__menu {
-  display: block;
-  visibility: visible;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.nav__menu.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .logo__image {
@@ -47,6 +56,7 @@
 }
 
 .menu__list {
+  list-style: none;
   padding: 18px 0 10px 0;
 }
 

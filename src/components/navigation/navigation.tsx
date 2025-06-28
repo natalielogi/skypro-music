@@ -1,8 +1,17 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './navigation.module.css';
+import { useState } from 'react';
 
 export default function Navigation() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <nav className={styles.main__nav}>
       <div className={styles.nav__logo}>
@@ -14,12 +23,15 @@ export default function Navigation() {
           alt={'logo'}
         />
       </div>
-      <div className={styles.nav__burger}>
+      <div className={styles.nav__burger} onClick={toggleMenu}>
         <span className={styles.burger__line}></span>
         <span className={styles.burger__line}></span>
         <span className={styles.burger__line}></span>
       </div>
-      <div className={styles.nav__menu}>
+      <div
+        className={`${styles.nav__menu} ${isOpen ? styles.active : ''}`}
+        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+      >
         <ul className={styles.menu__list}>
           <li className={styles.menu__item}>
             <Link href="/" className={styles.menu__link}>
