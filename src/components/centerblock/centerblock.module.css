@@ -308,15 +308,21 @@
   color: #696969;
 }
 
+.track__time {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .track__timeSvg {
   width: 14px;
   height: 12px;
-  margin-right: 17px;
   fill: transparent;
   stroke: #696969;
 }
 
 .track__timeText {
+  width: 32px;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;

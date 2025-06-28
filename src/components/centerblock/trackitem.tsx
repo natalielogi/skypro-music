@@ -43,7 +43,7 @@ export default function TrackItem({
             {album}
           </Link>
         </div>
-        <div className="track__time">
+        <div className={styles.track__time}>
           <svg className={styles.track__timeSvg}>
             <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
           </svg>
