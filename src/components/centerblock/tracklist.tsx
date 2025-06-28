@@ -1,6 +1,7 @@
 import styles from './centerblock.module.css';
 import cn from 'classnames';
 import TrackItem from './trackitem';
+import { tracks } from '@/data/tracks';
 
 export default function TrackList() {
   return (
@@ -20,36 +21,16 @@ export default function TrackList() {
         </div>
       </div>
       <div className={styles.content__playlist}>
-        <TrackItem
-          title="Guilt"
-          artist="Nero"
-          album="Welcome Reality"
-          duration={284}
-        />
-        <TrackItem
-          title="Elektro"
-          artist="Dynoro, Outwork, Mr. Gee"
-          album="Elektro"
-          duration={142}
-        />
-        <TrackItem
-          title="I’m Fire"
-          artist="Ali Bakgor"
-          album="I’m Fire"
-          duration={142}
-        />
-        <TrackItem
-          title="Non Stop (Remix)"
-          artist="Стоункат, Psychopath"
-          album="Non Stop"
-          duration={252}
-        />
-        <TrackItem
-          title="Run Run (feat. AR/CO)"
-          artist="Jaded, Will Clarke, AR/CO"
-          album="Run Run"
-          duration={174}
-        />{' '}
+        {tracks.map((track) => (
+          <TrackItem
+            key={track.id}
+            id={track.id}
+            title={track.title}
+            artist={track.artist}
+            album={track.album}
+            duration={track.duration}
+          />
+        ))}
       </div>
     </div>
   );

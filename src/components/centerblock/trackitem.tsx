@@ -3,6 +3,7 @@ import styles from './centerblock.module.css';
 import { formatDuration } from '@/utils/format';
 
 type TrackProps = {
+  id: number;
   title: string;
   artist: string;
   album: string;
