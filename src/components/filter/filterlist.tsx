@@ -7,26 +7,34 @@ type Props = {
 };
 
 export default function FilterList({ type }: Props) {
-  console.log('Рендерим список фильтра:', type);
-  const artists = Array.from(
-    new Set(
-      tracks.flatMap((track) =>
-        track.artist.split(',').map((name) => name.trim()),
-      ),
-    ),
-  );
   const activeValue = '';
+
+  let items: string[] = [];
+
+  if (type === 'исполнителю') {
+    items = Array.from(
+      new Set(
+        tracks.flatMap((track) =>
+          track.artist.split(',').map((name) => name.trim()),
+        ),
+      ),
+    );
+  } else if (type === 'жанру') {
+    items = Array.from(new Set(tracks.map((track) => track.genre)));
+  } else if (type === 'году выпуска') {
+    items = ['по умолчанию', 'сначала новые', 'сначала старые'];
+  }
 
   return (
     <div className={styles.filter__list}>
-      {artists.map((artist) => (
+      {items.map((item) => (
         <div
-          key={artist}
+          key={item}
           className={cn(styles.filter__item, {
-            [styles['filter__item--active']]: artist === activeValue,
+            [styles['filter__item--active']]: item === activeValue,
           })}
         >
-          {artist}
+          {item}
         </div>
       ))}
     </div>
