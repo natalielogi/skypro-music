@@ -1,0 +1,127 @@
+.centerblock__search {
+  width: 100%;
+  border-bottom: 1px solid #4e4e4e;
+  margin-bottom: 51px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.search__svg {
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  stroke: #ffffff;
+  fill: transparent;
+}
+
+.search__text {
+  flex-grow: 1;
+  background-color: transparent;
+  border: none;
+  padding: 13px 10px 14px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.search__text::placeholder {
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.centerblock__h2 {
+  font-size: 64px;
+  line-height: 72px;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+  margin-bottom: 45px;
+  color: white;
+}
+
+.centerblock__filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 51px;
+}
+
+.filter__title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  margin-right: 15px;
+  color: white;
+}
+
+.filter__button {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  border: 1px solid #ffffff;
+  border-radius: 60px;
+  padding: 6px 20px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.filter__button:not(:last-child) {
+  margin-right: 10px;
+}
+
+.active {
+  border: 1px solid #b672ff;
+  color: #b672ff;
+}
+
+/* Выпадающий попап */
+.filter__popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 10px;
+  z-index: 10;
+  width: 248px;
+  background: rgb(49, 49, 49);
+  border-radius: 12px;
+  padding: 34px;
+  box-sizing: border-box;
+}
+
+/* Прокручиваемый список */
+.filter__list {
+  max-height: 237px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Стилизация скролла */
+.filter__list::-webkit-scrollbar {
+  width: 4px;
+}
+.filter__list::-webkit-scrollbar-track {
+  background-color: rgba(75, 73, 73, 1);
+}
+.filter__list::-webkit-scrollbar-thumb {
+  background-color: white;
+}
+
+.filter__item {
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.filter__item:hover,
+.filter__item--active {
+  color: rgb(182, 114, 255);
+  text-decoration: underline;
+}
