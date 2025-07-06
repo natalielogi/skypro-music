@@ -1,25 +1,34 @@
+'use client';
+
 import Link from 'next/link';
 import styles from './centerblock.module.css';
 import { formatDuration } from '@/utils/format';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { setCurrentTrack } from '@/store/features/trackSlice';
+import { TrackType } from '@/sharedTypes/types';
 
-type TrackProps = {
-  id: number;
-  title: string;
-  artist: string;
-  album: string;
-  duration: number;
+type TrackProps = TrackType & {
   withSpan?: boolean;
 };
 
 export default function TrackItem({
+  id,
   title,
   artist,
   album,
   duration,
-  withSpan,
 }: TrackProps) {
+  const dispatch = useAppDispatch();
+  const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
+
+  const isActive = currentTrack?.id === id;
+
+  const handleClick = () => {
+    dispatch(setCurrentTrack({ id, title, artist, album, duration }));
+  };
+
   return (
-    <div className={styles.playlist__item}>
+    <div className={styles.playlist__item} onClick={handleClick}>
       <div className={styles.playlist__track}>
         <div className={styles.track__title}>
           <div className={styles.track__titleImage}>
@@ -30,7 +39,7 @@ export default function TrackItem({
           <div className="track__title-text">
             <Link className={styles.track__titleLink} href="">
               {title}{' '}
-              {withSpan && <span className={styles.track__titleSpan}></span>}
+              {isActive && <span className={styles.track__titleSpan}></span>}
             </Link>
           </div>
         </div>
