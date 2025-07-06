@@ -23,12 +23,12 @@ export default function TrackList() {
       <div className={styles.content__playlist}>
         {tracks.map((track) => (
           <TrackItem
-            key={track.id}
-            id={track.id}
-            title={track.title}
-            artist={track.artist}
+            key={track._id}
+            id={track._id}
+            title={track.name}
+            artist={track.author}
             album={track.album}
-            duration={track.duration}
+            duration={track.duration_in_seconds}
           />
         ))}
       </div>
