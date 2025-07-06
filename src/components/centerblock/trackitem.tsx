@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from './centerblock.module.css';
 import { formatDuration } from '@/utils/format';
 import { useAppDispatch, useAppSelector } from '@/store/store';
-import { setCurrentTrack } from '@/store/features/trackSlice';
+import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 
 type TrackProps = TrackType & {
@@ -17,6 +17,7 @@ export default function TrackItem({
   artist,
   album,
   duration,
+  track_file,
 }: TrackProps) {
   const dispatch = useAppDispatch();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
@@ -24,7 +25,10 @@ export default function TrackItem({
   const isActive = currentTrack?.id === id;
 
   const handleClick = () => {
-    dispatch(setCurrentTrack({ id, title, artist, album, duration }));
+    dispatch(
+      setCurrentTrack({ id, title, artist, album, duration, track_file }),
+    );
+    dispatch(setIsPlaying(true));
   };
 
   return (

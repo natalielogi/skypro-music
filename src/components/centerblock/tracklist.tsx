@@ -29,6 +29,7 @@ export default function TrackList() {
             artist={track.author}
             album={track.album}
             duration={track.duration_in_seconds}
+            track_file={track.track_file}
           />
         ))}
       </div>

@@ -4,4 +4,5 @@ export type TrackType = {
   artist: string;
   album: string;
   duration: number;
+  track_file: string;
 };
