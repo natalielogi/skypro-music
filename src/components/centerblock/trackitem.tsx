@@ -6,6 +6,7 @@ import { formatDuration } from '@/utils/format';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
+import cn from 'classnames';
 
 type TrackProps = TrackType & {
   withSpan?: boolean;
@@ -21,6 +22,7 @@ export default function TrackItem({
 }: TrackProps) {
   const dispatch = useAppDispatch();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
+  const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
 
   const isActive = currentTrack?.id === id;
 
@@ -36,14 +38,21 @@ export default function TrackItem({
       <div className={styles.playlist__track}>
         <div className={styles.track__title}>
           <div className={styles.track__titleImage}>
-            <svg className={styles.track__titleSvg}>
-              <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
-            </svg>
+            {isActive ? (
+              <span
+                className={cn(styles.track__dot, {
+                  [styles.pulsing]: isPlaying,
+                })}
+              />
+            ) : (
+              <svg className={styles.track__titleSvg}>
+                <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
+              </svg>
+            )}
           </div>
           <div className="track__title-text">
             <Link className={styles.track__titleLink} href="">
-              {title}{' '}
-              {isActive && <span className={styles.track__titleSpan}></span>}
+              {title}
             </Link>
           </div>
         </div>
