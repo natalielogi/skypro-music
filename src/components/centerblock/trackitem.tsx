@@ -1,36 +1,58 @@
+'use client';
+
 import Link from 'next/link';
 import styles from './centerblock.module.css';
 import { formatDuration } from '@/utils/format';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
+import { TrackType } from '@/sharedTypes/types';
+import cn from 'classnames';
 
-type TrackProps = {
-  id: number;
-  title: string;
-  artist: string;
-  album: string;
-  duration: number;
+type TrackProps = TrackType & {
   withSpan?: boolean;
 };
 
 export default function TrackItem({
+  id,
   title,
   artist,
   album,
   duration,
-  withSpan,
+  track_file,
 }: TrackProps) {
+  const dispatch = useAppDispatch();
+  const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
+  const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
+
+  const isActive = currentTrack?.id === id;
+
+  const handleClick = () => {
+    dispatch(
+      setCurrentTrack({ id, title, artist, album, duration, track_file }),
+    );
+    dispatch(setIsPlaying(true));
+  };
+
   return (
-    <div className={styles.playlist__item}>
+    <div className={styles.playlist__item} onClick={handleClick}>
       <div className={styles.playlist__track}>
         <div className={styles.track__title}>
           <div className={styles.track__titleImage}>
-            <svg className={styles.track__titleSvg}>
-              <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
-            </svg>
+            {isActive ? (
+              <span
+                className={cn(styles.track__dot, {
+                  [styles.pulsing]: isPlaying,
+                })}
+              />
+            ) : (
+              <svg className={styles.track__titleSvg}>
+                <use xlinkHref="/img/icon/sprite.svg#icon-note"></use>
+              </svg>
+            )}
           </div>
           <div className="track__title-text">
             <Link className={styles.track__titleLink} href="">
-              {title}{' '}
-              {withSpan && <span className={styles.track__titleSpan}></span>}
+              {title}
             </Link>
           </div>
         </div>
