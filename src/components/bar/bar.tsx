@@ -3,13 +3,17 @@
 import Link from 'next/link';
 import styles from './bar.module.css';
 import cn from 'classnames';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setIsPlaying } from '@/store/features/trackSlice';
+import ProgressBar from './progressBar';
 
 export default function Bar() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dispatch = useAppDispatch();
+
+  const [currentTime, setCurrentTime] = useState(0);
+  const duration = audioRef.current?.duration || 0;
 
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
@@ -51,10 +55,22 @@ export default function Bar() {
   return (
     <>
       {' '}
-      <audio ref={audioRef} hidden />
+      <audio
+        ref={audioRef}
+        hidden
+        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+      />
       <div className={styles.bar}>
         <div className={styles.bar__content}>
-          <div className={styles.bar__playerProgress}></div>
+          <ProgressBar
+            max={duration}
+            value={currentTime}
+            onChange={(e) => {
+              if (audioRef.current) {
+                audioRef.current.currentTime = +e.target.value;
+              }
+            }}
+          />{' '}
           <div className={styles.bar__playerBlock}>
             <div className={styles.bar__player}>
               <div className={styles.player__controls}>
