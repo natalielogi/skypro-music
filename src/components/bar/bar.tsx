@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
 import ProgressBar from './progressBar';
+import { formatDuration } from '@/utils/format';
 
 export default function Bar() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -112,11 +113,17 @@ export default function Bar() {
       )}
       <div className={styles.bar}>
         <div className={styles.bar__content}>
+          {currentTrack && (
+            <div className={styles.timeWrapper}>
+              <span>{formatDuration(Math.floor(currentTime))}</span>
+              <span>{formatDuration(Math.floor(duration))}</span>
+            </div>
+          )}
           <ProgressBar
             max={duration}
             value={currentTime}
-            step={1} // или другое значение, если нужно
-            readOnly={false} // или true, если полоса не должна быть интерактивной
+            step={1}
+            readOnly={false}
             onChange={(e) => {
               const time = Number(e.target.value);
               if (audioRef.current) {
