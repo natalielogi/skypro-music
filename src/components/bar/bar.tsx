@@ -18,20 +18,35 @@ export default function Bar() {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
 
+  const [volume, setVolume] = useState(0.5);
+
+  const [isLoading, setIsloading] = useState(false);
+
   useEffect(() => {
     if (audioRef.current && currentTrack?.track_file) {
       const audio = audioRef.current;
-      console.log('loaded track_file:', currentTrack.track_file);
+      setIsloading(true);
       audio.src = currentTrack.track_file;
-      audio.load();
+      audio.volume = volume;
 
-      audio
-        .play()
-        .then(() => dispatch(setIsPlaying(true)))
-        .catch((err) => {
-          console.error('Autoplay error:', err);
-          dispatch(setIsPlaying(false));
-        });
+      const handleCanPlay = () => {
+        audio
+          .play()
+          .then(() => {
+            dispatch(setIsPlaying(true));
+            setIsloading(false);
+          })
+          .catch((err) => {
+            console.error('Autoplay error', err);
+            dispatch(setIsPlaying(false));
+            setIsloading(false);
+          });
+      };
+      audio.addEventListener('canplaythrough', handleCanPlay);
+
+      return () => {
+        audio.removeEventListener('canplaythrough', handleCanPlay);
+      };
     }
   }, [currentTrack]);
 
@@ -52,6 +67,12 @@ export default function Bar() {
     }
   };
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
   return (
     <>
       {' '}
@@ -60,6 +81,13 @@ export default function Bar() {
         hidden
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
       />
+      {isLoading && (
+        <div
+          style={{ color: 'white', marginBottom: '8px', marginLeft: '20px' }}
+        >
+          Загрузка трека...
+        </div>
+      )}
       <div className={styles.bar}>
         <div className={styles.bar__content}>
           <ProgressBar
@@ -166,7 +194,11 @@ export default function Bar() {
                   <input
                     className={cn(styles.volume__progressLine, styles.btn)}
                     type="range"
-                    name="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={(e) => setVolume(+e.target.value)}
                   />
                 </div>
               </div>
