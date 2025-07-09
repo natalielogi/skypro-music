@@ -82,8 +82,10 @@ export default function Bar() {
     const currentIndex = playlist.findIndex(
       (track) => track.id === currentTrack.id,
     );
-    const nextIndex = (currentIndex + 1) % playlist.length;
-    dispatch(setCurrentTrack(playlist[nextIndex]));
+
+    if (currentIndex === -1 || currentIndex === playlist.length - 1) return;
+
+    dispatch(setCurrentTrack(playlist[currentIndex + 1]));
   };
 
   const handlePrevTrack = () => {
@@ -92,8 +94,10 @@ export default function Bar() {
     const currentIndex = playlist.findIndex(
       (track) => track.id === currentTrack.id,
     );
-    const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-    dispatch(setCurrentTrack(playlist[prevIndex]));
+
+    if (currentIndex <= 0) return;
+
+    dispatch(setCurrentTrack(playlist[currentIndex - 1]));
   };
 
   return (
@@ -103,6 +107,7 @@ export default function Bar() {
         ref={audioRef}
         hidden
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+        onEnded={handleNextTrack}
       />
       {isLoading && (
         <div
