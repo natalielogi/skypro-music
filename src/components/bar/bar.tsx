@@ -5,7 +5,7 @@ import styles from './bar.module.css';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/store';
-import { setIsPlaying } from '@/store/features/trackSlice';
+import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
 import ProgressBar from './progressBar';
 
 export default function Bar() {
@@ -21,6 +21,8 @@ export default function Bar() {
   const [volume, setVolume] = useState(0.5);
 
   const [isLoading, setIsloading] = useState(false);
+
+  const playlist = useAppSelector((state) => state.tracks.playlist);
 
   useEffect(() => {
     if (audioRef.current && currentTrack?.track_file) {
@@ -73,6 +75,26 @@ export default function Bar() {
     }
   }, [volume]);
 
+  const handleNextTrack = () => {
+    if (!currentTrack || playlist.length === 0) return;
+
+    const currentIndex = playlist.findIndex(
+      (track) => track.id === currentTrack.id,
+    );
+    const nextIndex = (currentIndex + 1) % playlist.length;
+    dispatch(setCurrentTrack(playlist[nextIndex]));
+  };
+
+  const handlePrevTrack = () => {
+    if (!currentTrack || playlist.length === 0) return;
+
+    const currentIndex = playlist.findIndex(
+      (track) => track.id === currentTrack.id,
+    );
+    const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    dispatch(setCurrentTrack(playlist[prevIndex]));
+  };
+
   return (
     <>
       {' '}
@@ -93,9 +115,12 @@ export default function Bar() {
           <ProgressBar
             max={duration}
             value={currentTime}
+            step={1} // или другое значение, если нужно
+            readOnly={false} // или true, если полоса не должна быть интерактивной
             onChange={(e) => {
+              const time = Number(e.target.value);
               if (audioRef.current) {
-                audioRef.current.currentTime = +e.target.value;
+                audioRef.current.currentTime = time;
               }
             }}
           />{' '}
@@ -104,7 +129,7 @@ export default function Bar() {
               <div className={styles.player__controls}>
                 <div
                   className={styles.player__btnPrev}
-                  onClick={() => alert('Еще не реализовано')}
+                  onClick={handlePrevTrack}
                 >
                   <svg className={styles.player__btnPrevSvg}>
                     <use xlinkHref="/img/icon/sprite.svg#icon-prev"></use>
@@ -122,7 +147,7 @@ export default function Bar() {
                 </div>
                 <div
                   className={styles.player__btnNext}
-                  onClick={() => alert('Еще не реализовано')}
+                  onClick={handleNextTrack}
                 >
                   <svg className={styles.player__btnNextSvg}>
                     <use xlinkHref="/img/icon/sprite.svg#icon-next"></use>

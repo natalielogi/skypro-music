@@ -1,9 +1,13 @@
+'use client';
+
 import styles from './centerblock.module.css';
 import cn from 'classnames';
 import TrackItem from './trackitem';
-import { tracks } from '@/data/tracks';
+import { useAppSelector } from '@/store/store';
 
 export default function TrackList() {
+  const playlist = useAppSelector((state) => state.tracks.playlist);
+
   return (
     <div className={styles.centerblock__content}>
       <div className={styles.content__title}>
@@ -21,14 +25,14 @@ export default function TrackList() {
         </div>
       </div>
       <div className={styles.content__playlist}>
-        {tracks.map((track) => (
+        {playlist.map((track) => (
           <TrackItem
-            key={track._id}
-            id={track._id}
-            title={track.name}
-            artist={track.author}
+            key={track.id}
+            id={track.id}
+            title={track.title}
+            artist={track.artist}
             album={track.album}
-            duration={track.duration_in_seconds}
+            duration={track.duration}
             track_file={track.track_file}
           />
         ))}
