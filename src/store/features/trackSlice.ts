@@ -8,6 +8,7 @@ type initialStateType = {
   currentPlaylist: TrackType[];
   shuffledPlaylist: TrackType[];
   isShuffle: boolean;
+  isRepeat: boolean;
 };
 
 const initialState: initialStateType = {
@@ -16,6 +17,7 @@ const initialState: initialStateType = {
   currentPlaylist: [],
   shuffledPlaylist: [],
   isShuffle: false,
+  isRepeat: false,
 };
 
 const trackSlice = createSlice({
@@ -62,6 +64,9 @@ const trackSlice = createSlice({
         state.currentTrack = playlist[currentIndex - 1];
       }
     },
+    togglerepeat: (state) => {
+      state.isRepeat = !state.isRepeat;
+    },
   },
 });
 
@@ -72,5 +77,6 @@ export const {
   toggleShuffle,
   setNextTrack,
   setPreviousTrack,
+  togglerepeat,
 } = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;

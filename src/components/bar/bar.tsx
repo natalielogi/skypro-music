@@ -6,11 +6,11 @@ import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import {
-  setCurrentTrack,
   setIsPlaying,
   setNextTrack,
   setPreviousTrack,
   toggleShuffle,
+  togglerepeat,
 } from '@/store/features/trackSlice';
 import ProgressBar from './progressBar';
 import { formatDuration } from '@/utils/format';
@@ -27,6 +27,7 @@ export default function Bar() {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
   const isShuffle = useAppSelector((state) => state.tracks.isShuffle);
+  const isRepeat = useAppSelector((state) => state.tracks.isRepeat);
 
   useEffect(() => {
     if (audioRef.current && currentTrack?.track_file) {
@@ -84,7 +85,14 @@ export default function Bar() {
         ref={audioRef}
         hidden
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-        onEnded={() => dispatch(setNextTrack())}
+        onEnded={() => {
+          if (isRepeat && audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play();
+          } else {
+            dispatch(setNextTrack());
+          }
+        }}
       />
       {isLoading && (
         <div
@@ -144,9 +152,13 @@ export default function Bar() {
                 </div>
                 <div
                   className={cn(styles.player__btnRepeat, styles.btnIcon)}
-                  onClick={() => alert('Еще не реализовано')}
+                  onClick={() => dispatch(togglerepeat())}
                 >
-                  <svg className={styles.player__btnRepeatSvg}>
+                  <svg
+                    className={cn(styles.player__btnRepeatSvg, {
+                      [styles.player__btnControlsActive]: isRepeat,
+                    })}
+                  >
                     <use xlinkHref="/img/icon/sprite.svg#icon-repeat"></use>
                   </svg>
                 </div>
