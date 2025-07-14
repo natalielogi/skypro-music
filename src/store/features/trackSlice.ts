@@ -1,16 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TrackType } from '@/sharedTypes/types';
+import { stat } from 'fs';
 
 type initialStateType = {
   currentTrack: TrackType | null;
   isPlaying: boolean;
-  playlist: TrackType[];
+  currentPlaylist: TrackType[];
+  shuffledPlaylist: TrackType[];
+  isShuffle: boolean;
 };
 
 const initialState: initialStateType = {
   currentTrack: null,
   isPlaying: false,
-  playlist: [],
+  currentPlaylist: [],
+  shuffledPlaylist: [],
+  isShuffle: false,
 };
 
 const trackSlice = createSlice({
@@ -24,11 +29,48 @@ const trackSlice = createSlice({
       state.isPlaying = action.payload;
     },
     setPlayList: (state, action: PayloadAction<TrackType[]>) => {
-      state.playlist = action.payload;
+      state.currentPlaylist = action.payload;
+      state.shuffledPlaylist = [...action.payload].sort(
+        () => Math.random() - 0.5,
+      );
+    },
+    toggleShuffle: (state) => {
+      state.isShuffle = !state.isShuffle;
+    },
+    setNextTrack: (state) => {
+      const playlist = state.isShuffle
+        ? state.shuffledPlaylist
+        : state.currentPlaylist;
+      const currentIndex = playlist.findIndex(
+        (track) => track.id === state.currentTrack?.id,
+      );
+
+      if (currentIndex !== -1 && currentIndex < playlist.length - 1) {
+        state.currentTrack = playlist[currentIndex + 1];
+      } else {
+        state.currentTrack = null;
+      }
+    },
+    setPreviousTrack: (state) => {
+      const playlist = state.isShuffle
+        ? state.shuffledPlaylist
+        : state.currentPlaylist;
+      const currentIndex = playlist.findIndex(
+        (track) => track.id === state.currentTrack?.id,
+      );
+      if (currentIndex > 0) {
+        state.currentTrack = playlist[currentIndex - 1];
+      }
     },
   },
 });
 
-export const { setCurrentTrack, setIsPlaying, setPlayList } =
-  trackSlice.actions;
+export const {
+  setCurrentTrack,
+  setIsPlaying,
+  setPlayList,
+  toggleShuffle,
+  setNextTrack,
+  setPreviousTrack,
+} = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;

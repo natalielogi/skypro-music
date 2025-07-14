@@ -6,7 +6,7 @@ import TrackItem from './trackitem';
 import { useAppSelector } from '@/store/store';
 
 export default function TrackList() {
-  const playlist = useAppSelector((state) => state.tracks.playlist);
+  const playlist = useAppSelector((state) => state.tracks.currentPlaylist);
 
   return (
     <div className={styles.centerblock__content}>
