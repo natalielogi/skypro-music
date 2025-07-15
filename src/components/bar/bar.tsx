@@ -126,7 +126,17 @@ export default function Bar() {
               <div className={styles.player__controls}>
                 <div
                   className={styles.player__btnPrev}
-                  onClick={() => dispatch(setPreviousTrack())}
+                  onClick={() => {
+                    if (!audioRef.current) return;
+
+                    const current = audioRef.current.currentTime;
+
+                    if (current > 3) {
+                      audioRef.current.currentTime = 0;
+                    } else {
+                      dispatch(setPreviousTrack());
+                    }
+                  }}
                 >
                   <svg className={styles.player__btnPrevSvg}>
                     <use xlinkHref="/img/icon/sprite.svg#icon-prev"></use>
