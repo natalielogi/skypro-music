@@ -10,6 +10,8 @@ type initialStateType = {
   playHistory: TrackType[];
   isShuffle: boolean;
   isRepeat: boolean;
+  isUserTriggered: boolean;
+  futureTrack: TrackType | null;
 };
 
 const initialState: initialStateType = {
@@ -20,6 +22,8 @@ const initialState: initialStateType = {
   playHistory: [],
   isShuffle: false,
   isRepeat: false,
+  isUserTriggered: false,
+  futureTrack: null,
 };
 
 const trackSlice = createSlice({
@@ -27,7 +31,12 @@ const trackSlice = createSlice({
   initialState,
   reducers: {
     setCurrentTrack: (state, action: PayloadAction<TrackType>) => {
+      if (state.isShuffle && state.currentTrack) {
+        state.playHistory.push(state.currentTrack);
+      }
       state.currentTrack = action.payload;
+      state.isPlaying = true;
+      state.isUserTriggered = true;
     },
     setIsPlaying: (state, action: PayloadAction<boolean>) => {
       state.isPlaying = action.payload;
@@ -51,16 +60,26 @@ const trackSlice = createSlice({
         (track) => Number(track.id) === Number(state.currentTrack?.id),
       );
 
-      if (currentIndex === -1 && playlist.length > 0) {
-        state.currentTrack = playlist[0];
-        state.isPlaying = true;
+      if (state.futureTrack) {
+        state.playHistory.push(state.currentTrack!);
+        state.currentTrack = state.futureTrack;
+        state.futureTrack = null;
+        state.isUserTriggered = false;
         return;
       }
 
-      if (currentIndex < playlist.length - 1) {
+      state.isUserTriggered = false;
+
+      if (currentIndex === -1 && playlist.length > 0) {
+        state.currentTrack = playlist[0];
+        return;
+      }
+
+      if (!state.isShuffle && currentIndex < playlist.length - 1) {
+        state.currentTrack = playlist[currentIndex + 1];
+      } else if (state.isShuffle && currentIndex < playlist.length - 1) {
         state.playHistory.push(state.currentTrack!);
         state.currentTrack = playlist[currentIndex + 1];
-        state.isPlaying = true;
       } else if (state.isShuffle) {
         const newShuffled = [...state.currentPlaylist].sort(
           () => Math.random() - 0.5,
@@ -68,17 +87,29 @@ const trackSlice = createSlice({
         state.shuffledPlaylist = newShuffled;
         state.playHistory.push(state.currentTrack!);
         state.currentTrack = newShuffled[0];
-        state.isPlaying = true;
-      } else {
-        state.isPlaying = false;
       }
     },
     setPreviousTrack: (state) => {
-      if (state.playHistory.length > 0) {
-        const previousTrack = state.playHistory.pop();
-        state.currentTrack = previousTrack!;
-        state.isPlaying = true;
+      if (state.isShuffle) {
+        if (state.playHistory.length > 0) {
+          state.futureTrack = state.currentTrack;
+          const previousTrack = state.playHistory.pop();
+          state.currentTrack = previousTrack!;
+          state.isPlaying = true;
+        }
+      } else {
+        const currentIndex = state.currentPlaylist.findIndex(
+          (track) => Number(track.id) === Number(state.currentTrack?.id),
+        );
+
+        if (currentIndex > 0) {
+          state.futureTrack = state.currentTrack;
+          state.currentTrack = state.currentPlaylist[currentIndex - 1];
+          state.isPlaying = true;
+        }
       }
+
+      state.isUserTriggered = false;
     },
     togglerepeat: (state) => {
       state.isRepeat = !state.isRepeat;
