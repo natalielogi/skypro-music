@@ -7,6 +7,7 @@ type initialStateType = {
   isPlaying: boolean;
   currentPlaylist: TrackType[];
   shuffledPlaylist: TrackType[];
+  playHistory: TrackType[];
   isShuffle: boolean;
   isRepeat: boolean;
 };
@@ -16,6 +17,7 @@ const initialState: initialStateType = {
   isPlaying: false,
   currentPlaylist: [],
   shuffledPlaylist: [],
+  playHistory: [],
   isShuffle: false,
   isRepeat: false,
 };
@@ -35,6 +37,7 @@ const trackSlice = createSlice({
       state.shuffledPlaylist = [...action.payload].sort(
         () => Math.random() - 0.5,
       );
+      state.playHistory = [];
     },
     toggleShuffle: (state) => {
       state.isShuffle = !state.isShuffle;
@@ -43,25 +46,38 @@ const trackSlice = createSlice({
       const playlist = state.isShuffle
         ? state.shuffledPlaylist
         : state.currentPlaylist;
+
       const currentIndex = playlist.findIndex(
-        (track) => track.id === state.currentTrack?.id,
+        (track) => Number(track.id) === Number(state.currentTrack?.id),
       );
 
-      if (currentIndex !== -1 && currentIndex < playlist.length - 1) {
+      if (currentIndex === -1 && playlist.length > 0) {
+        state.currentTrack = playlist[0];
+        state.isPlaying = true;
+        return;
+      }
+
+      if (currentIndex < playlist.length - 1) {
+        state.playHistory.push(state.currentTrack!);
         state.currentTrack = playlist[currentIndex + 1];
+        state.isPlaying = true;
+      } else if (state.isShuffle) {
+        const newShuffled = [...state.currentPlaylist].sort(
+          () => Math.random() - 0.5,
+        );
+        state.shuffledPlaylist = newShuffled;
+        state.playHistory.push(state.currentTrack!);
+        state.currentTrack = newShuffled[0];
+        state.isPlaying = true;
       } else {
-        state.currentTrack = null;
+        state.isPlaying = false;
       }
     },
     setPreviousTrack: (state) => {
-      const playlist = state.isShuffle
-        ? state.shuffledPlaylist
-        : state.currentPlaylist;
-      const currentIndex = playlist.findIndex(
-        (track) => track.id === state.currentTrack?.id,
-      );
-      if (currentIndex > 0) {
-        state.currentTrack = playlist[currentIndex - 1];
+      if (state.playHistory.length > 0) {
+        const previousTrack = state.playHistory.pop();
+        state.currentTrack = previousTrack!;
+        state.isPlaying = true;
       }
     },
     togglerepeat: (state) => {
