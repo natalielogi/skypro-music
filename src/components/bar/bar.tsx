@@ -185,12 +185,12 @@ export default function Bar() {
                   </div>
                   <div className={styles.trackPlay__author}>
                     <Link className={styles.trackPlay__authorLink} href="">
-                      Ты та...
+                      {currentTrack?.title}
                     </Link>
                   </div>
                   <div className={styles.trackPlay__album}>
                     <Link className={styles.trackPlay__albumLink} href="">
-                      Баста
+                      {currentTrack?.artist}
                     </Link>
                   </div>
                 </div>
