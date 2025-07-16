@@ -7,6 +7,8 @@ type Props = {
 };
 
 export default function Centerblock({ pageTitle = 'Треки' }: Props) {
+  console.log('Centerblock rendered');
+
   return (
     <div className={styles.centerblock}>
       <FilterBlock pageTitle={pageTitle} />

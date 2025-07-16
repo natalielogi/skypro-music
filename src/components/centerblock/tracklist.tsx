@@ -6,6 +6,8 @@ import TrackItem from './trackitem';
 import { useAppSelector } from '@/store/store';
 
 export default function TrackList() {
+  console.log('TrackList rendered');
+
   const playlist = useAppSelector((state) => state.tracks.currentPlaylist);
 
   return (
