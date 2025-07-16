@@ -61,6 +61,7 @@
   -ms-flex-direction: row;
   flex-direction: row;
   padding: 0 27px 0 31px;
+  gap: 33px;
 }
 
 .player__btnPrev,
@@ -75,10 +76,7 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-}
-
-.player__btnPrev {
-  margin-right: 23px;
+  cursor: pointer;
 }
 
 .player__btnPrevSvg {
@@ -96,9 +94,13 @@
   fill: #d9d9d9;
 }
 
+.player__btnPrev {
+  cursor: pointer;
+}
+
 .player__btnNext {
-  margin-right: 28px;
   fill: #a53939;
+  cursor: pointer;
 }
 
 .player__btnNextSvg {
@@ -128,14 +130,24 @@
 }
 
 .player__btnRepeat {
-  margin-right: 24px;
+  margin-left: 25px;
+  cursor: pointer;
 }
 
 .player__btnRepeatSvg {
   width: 18px;
   height: 12px;
-  fill: transparent;
-  stroke: #696969;
+  color: #696969;
+  transition: color 0.3s ease;
+}
+
+.player__btnShuffle {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .player__btnShuffleSvg {
@@ -143,6 +155,11 @@
   height: 12px;
   fill: transparent;
   stroke: #696969;
+}
+
+.player__btnControlsActive {
+  stroke: rgba(217, 217, 217, 1);
+  fill: rgba(217, 217, 217, 1);
 }
 
 .player__trackPlay {
@@ -234,15 +251,6 @@
   margin-left: 28.5px;
 }
 
-.player__btnShuffle {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
 .trackPlay__likeSvg {
   width: 14px;
   height: 12px;
@@ -281,7 +289,7 @@
   align-items: center;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .volume__image {
@@ -327,4 +335,73 @@
   border-radius: 50%;
   position: relative;
   margin-top: -7px;
+}
+
+.styledProgressInput {
+  --progress-height: 5px;
+  --progress-color: #b672ff;
+  --progress-bg-color: #2e2e2e;
+
+  margin: 0;
+  width: 100%;
+  height: var(--progress-height);
+  appearance: none;
+  cursor: pointer;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  transition: 0.2s;
+}
+
+.styledProgressInput:hover {
+  --progress-height: 8px;
+}
+
+.styledProgressInput::-webkit-slider-runnable-track {
+  position: relative;
+  height: var(--progress-height);
+  background: var(--progress-bg-color);
+}
+
+.styledProgressInput::-webkit-slider-thumb {
+  --thumb-height: 10px;
+  --thumb-width: 10px;
+
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb-width);
+  height: var(--thumb-height);
+  background-color: var(--progress-color);
+  border-radius: 50%;
+  position: relative;
+
+  box-shadow: -100vmax 0 0 100vmax var(--progress-color);
+}
+
+.styledProgressInput::-moz-range-track {
+  width: 100%;
+  height: var(--progress-height);
+  background: var(--progress-bg-color);
+}
+
+.styledProgressInput::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--progress-color);
+  border: none;
+}
+
+.styledProgressInput::-moz-range-progress {
+  background-color: var(--progress-color);
+  height: var(--progress-height);
+}
+
+.timeWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 20px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease;
 }
