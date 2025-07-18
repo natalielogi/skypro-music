@@ -1,32 +1,11 @@
 import axios from 'axios';
 import { BASE_URL } from '../constants';
-
-type authUserProps = {
-  email: string;
-  password: string;
-};
-
-type authUserReturn = {
-  email: string;
-  username: string;
-  _id: number;
-};
-
-type registerUserprops = {
-  email: string;
-  password: string;
-  username: string;
-};
-
-type registerUserReturn = {
-  message: string;
-  result: {
-    username: string;
-    email: string;
-    _id: number;
-  };
-  success: boolean;
-};
+import {
+  authUserProps,
+  authUserReturn,
+  registerUserReturn,
+  registerUserprops,
+} from '@/sharedTypes/types';
 
 export const authUser = (data: authUserProps): Promise<authUserReturn> => {
   return axios

@@ -1,5 +1,5 @@
 import styles from './filterblock.module.css';
-import { tracks } from '@/data/tracks';
+import { useAppSelector } from '@/store/store';
 import cn from 'classnames';
 
 type Props = {
@@ -9,18 +9,22 @@ type Props = {
 export default function FilterList({ type }: Props) {
   const activeValue = '';
 
+  const tracks = useAppSelector((state) => state.tracks.currentPlaylist);
+
   let items: string[] = [];
 
   if (type === 'исполнителю') {
     items = Array.from(
       new Set(
         tracks.flatMap((track) =>
-          track.artist.split(',').map((name) => name.trim()),
+          track.author
+            ? track.author.split(',').map((name) => name.trim())
+            : [],
         ),
       ),
     );
   } else if (type === 'жанру') {
-    items = Array.from(new Set(tracks.map((track) => track.genre)));
+    items = Array.from(new Set(tracks.flatMap((track) => track.genre)));
   } else if (type === 'году выпуска') {
     items = ['по умолчанию', 'сначала новые', 'сначала старые'];
   }

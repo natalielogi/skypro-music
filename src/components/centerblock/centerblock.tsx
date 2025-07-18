@@ -1,10 +1,7 @@
 import styles from './centerblock.module.css';
 import FilterBlock from '../filter/filterblock';
 import TrackList from './tracklist';
-
-type Props = {
-  pageTitle?: string;
-};
+import { Props } from '@/sharedTypes/types';
 
 export default function Centerblock({ pageTitle = 'Треки' }: Props) {
   console.log('Centerblock rendered');
