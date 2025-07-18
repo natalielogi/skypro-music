@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { BASE_URL } from '../constants';
 
-type authUserprops = {
+type authUserProps = {
   email: string;
   password: string;
 };
 
-type authUserreturn = {
+type authUserReturn = {
   email: string;
   username: string;
   _id: number;
@@ -28,12 +28,14 @@ type registerUserReturn = {
   success: boolean;
 };
 
-export const authUser = (data: authUserprops): Promise<authUserreturn> => {
-  return axios.post(BASE_URL + '/user/login/', data, {
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
+export const authUser = (data: authUserProps): Promise<authUserReturn> => {
+  return axios
+    .post(BASE_URL + '/user/login/', data, {
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+    .then((res) => res.data);
 };
 
 export const registerUser = (

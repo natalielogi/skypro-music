@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { ChangeEvent, useState, MouseEvent } from 'react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/store/store';
+import { setUser } from '@/store/features/authSlice';
 
 export default function Signin() {
   const [email, setEmail] = useState('');
@@ -15,6 +17,7 @@ export default function Signin() {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -34,8 +37,9 @@ export default function Signin() {
     setIsLoading(true);
 
     authUser({ email, password })
-      .then((res) => {
-        console.log(res);
+      .then((user) => {
+        dispatch(setUser(user));
+        localStorage.setItem('user', JSON.stringify(user));
         router.push('/music/main');
       })
       .catch((error) => {
