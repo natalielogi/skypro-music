@@ -4,7 +4,7 @@ import { BASE_URL } from '../constants';
 
 export const getSelections = (): Promise<GetSelectionsResponse> => {
   return axios
-    .get<GetSelectionsResponse>(`${BASE_URL}/catalog/selections/all`, {
+    .get<GetSelectionsResponse>(`${BASE_URL}/catalog/selection/all`, {
       headers: {
         'Content-Type': 'application/json',
       },

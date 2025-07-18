@@ -16,7 +16,7 @@ export type TrackType = {
 
 export type SelectionType = {
   _id: number;
-  items: TrackType[];
+  items: number[];
   owner: number[];
   __v: number;
 };
