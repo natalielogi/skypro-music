@@ -71,11 +71,11 @@ export default function Signin() {
 
   return (
     <>
-      <a href="/music/main">
+      <Link href="/music/main">
         <div className={styles.modal__logo}>
           <img src="/img/logo_modal.png" alt="logo" />
         </div>
-      </a>
+      </Link>
       <input
         className={classNames(styles.modal__input, styles.login)}
         type="text"

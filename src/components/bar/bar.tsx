@@ -22,7 +22,6 @@ export default function Bar() {
   const [currentTime, setCurrentTime] = useState(0);
   const duration = audioRef.current?.duration || 0;
   const [volume, setVolume] = useState(0.5);
-  const [isLoading, setIsloading] = useState(false);
 
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
@@ -32,7 +31,6 @@ export default function Bar() {
   useEffect(() => {
     if (audioRef.current && currentTrack?.track_file) {
       const audio = audioRef.current;
-      setIsloading(true);
       audio.src = currentTrack.track_file;
       audio.volume = volume;
 
@@ -41,14 +39,13 @@ export default function Bar() {
           .play()
           .then(() => {
             dispatch(setIsPlaying(true));
-            setIsloading(false);
           })
           .catch((err) => {
             console.error('Autoplay error', err);
             dispatch(setIsPlaying(false));
-            setIsloading(false);
           });
       };
+
       audio.addEventListener('canplaythrough', handleCanPlay);
 
       return () => {
@@ -94,13 +91,6 @@ export default function Bar() {
           }
         }}
       />
-      {isLoading && (
-        <div
-          style={{ color: 'white', marginBottom: '8px', marginLeft: '20px' }}
-        >
-          Загрузка трека...
-        </div>
-      )}
       <div className={styles.bar}>
         <div className={styles.bar__content}>
           {currentTrack && (

@@ -3,7 +3,6 @@
 import Centerblock from '@/components/centerblock/centerblock';
 import { getSelections } from '@/services/tracks/selectionApi';
 import { getTracks } from '@/services/tracks/tracksApi';
-import { TrackType } from '@/sharedTypes/types';
 import { setPlayList } from '@/store/features/trackSlice';
 import { useAppDispatch } from '@/store/store';
 import { useParams } from 'next/navigation';
@@ -24,7 +23,9 @@ const categoryMap: Record<string, number> = {
 export default function CategoryPage() {
   const params = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const [pageTitle, setPageTitle] = useState('Загрузка...');
+  const [pageTitle, setPageTitle] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +36,6 @@ export default function CategoryPage() {
         ]);
 
         const selectionId = categoryMap[params.id];
-
         const selection = selectionsResponse.data.find(
           (sel) => sel._id === selectionId,
         );
@@ -50,8 +50,12 @@ export default function CategoryPage() {
         } else {
           setPageTitle('Категория не найдена');
         }
+
+        setIsLoading(false);
       } catch (err) {
-        console.error('Ошибка загрузки данных;', err);
+        console.error('Ошибка загрузки данных:', err);
+        setHasError(true);
+        setIsLoading(false);
         setPageTitle('Ошибка загрузки');
       }
     };
@@ -59,5 +63,11 @@ export default function CategoryPage() {
     fetchData();
   }, [params.id, dispatch]);
 
-  return <Centerblock pageTitle={pageTitle} />;
+  return (
+    <Centerblock
+      pageTitle={pageTitle}
+      isLoading={isLoading}
+      hasError={hasError}
+    />
+  );
 }

@@ -234,3 +234,9 @@
     opacity: 1;
   }
 }
+
+.centerblock__message {
+  color: white;
+  font-size: 18px;
+  margin-top: 40px;
+}
