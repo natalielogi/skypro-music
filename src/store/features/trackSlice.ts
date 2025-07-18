@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TrackType } from '@/sharedTypes/types';
-import { stat } from 'fs';
 
 type initialStateType = {
   currentTrack: TrackType | null;
@@ -57,7 +56,7 @@ const trackSlice = createSlice({
         : state.currentPlaylist;
 
       const currentIndex = playlist.findIndex(
-        (track) => Number(track.id) === Number(state.currentTrack?.id),
+        (track) => Number(track._id) === Number(state.currentTrack?._id),
       );
 
       if (state.futureTrack) {
@@ -99,7 +98,7 @@ const trackSlice = createSlice({
         }
       } else {
         const currentIndex = state.currentPlaylist.findIndex(
-          (track) => Number(track.id) === Number(state.currentTrack?.id),
+          (track) => Number(track._id) === Number(state.currentTrack?._id),
         );
 
         if (currentIndex > 0) {

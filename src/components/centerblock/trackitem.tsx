@@ -8,28 +8,20 @@ import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import cn from 'classnames';
 
-type TrackProps = TrackType & {
-  withSpan?: boolean;
+type TrackProps = {
+  track: TrackType;
 };
 
-export default function TrackItem({
-  id,
-  title,
-  artist,
-  album,
-  duration,
-  track_file,
-}: TrackProps) {
+export default function TrackItem({ track }: TrackProps) {
+  const { _id, name, author, album, duration_in_seconds, track_file } = track;
   const dispatch = useAppDispatch();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
 
-  const isActive = currentTrack?.id === id;
+  const isActive = currentTrack?._id === _id;
 
   const handleClick = () => {
-    dispatch(
-      setCurrentTrack({ id, title, artist, album, duration, track_file }),
-    );
+    dispatch(setCurrentTrack(track));
     dispatch(setIsPlaying(true));
   };
 
@@ -52,13 +44,13 @@ export default function TrackItem({
           </div>
           <div className="track__title-text">
             <Link className={styles.track__titleLink} href="">
-              {title}
+              {name}
             </Link>
           </div>
         </div>
         <div className={styles.track__author}>
           <Link className={styles.track__authorLink} href="">
-            {artist}
+            {author}
           </Link>
         </div>
         <div className={styles.track__album}>
@@ -71,7 +63,7 @@ export default function TrackItem({
             <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
           </svg>
           <span className={styles.track__timeText}>
-            {formatDuration(duration)}
+            {formatDuration(duration_in_seconds)}
           </span>
         </div>
       </div>

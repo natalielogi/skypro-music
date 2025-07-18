@@ -6,6 +6,8 @@ import TrackItem from './trackitem';
 import { useAppSelector } from '@/store/store';
 
 export default function TrackList() {
+  console.log('TrackList rendered');
+
   const playlist = useAppSelector((state) => state.tracks.currentPlaylist);
 
   return (
@@ -25,17 +27,10 @@ export default function TrackList() {
         </div>
       </div>
       <div className={styles.content__playlist}>
-        {playlist.map((track) => (
-          <TrackItem
-            key={track.id}
-            id={track.id}
-            title={track.title}
-            artist={track.artist}
-            album={track.album}
-            duration={track.duration}
-            track_file={track.track_file}
-          />
-        ))}
+        {playlist.map((track) => {
+          console.log('track:', track);
+          return <TrackItem key={track._id} track={track} />;
+        })}
       </div>
     </div>
   );
