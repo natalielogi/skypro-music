@@ -4,10 +4,18 @@ import Link from 'next/link';
 import styles from './centerblock.module.css';
 import { formatDuration } from '@/utils/format';
 import { useAppDispatch, useAppSelector } from '@/store/store';
-import { setCurrentTrack, setIsPlaying } from '@/store/features/trackSlice';
+import {
+  removeFromPlaylist,
+  setCurrentTrack,
+  setIsPlaying,
+} from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import cn from 'classnames';
 import { addFavorite, removeFavorite } from '@/store/features/favoritesSlice';
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from '@/services/tracks/favoritesApi';
 
 type TrackProps = {
   track: TrackType;
@@ -29,13 +37,24 @@ export default function TrackItem({ track }: TrackProps) {
     dispatch(setIsPlaying(true));
   };
 
-  const handleLickeClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleLikeClick = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    if (isFavorite) {
-      dispatch(removeFavorite(Number(_id)));
-    } else {
-      dispatch(addFavorite(track));
+    try {
+      if (isFavorite) {
+        await removeFromFavorites(Number(_id));
+        dispatch(removeFavorite(Number(_id)));
+        console.log('удалён', _id);
+        if (window.location.pathname === '/music/favorites') {
+          dispatch(removeFromPlaylist(Number(_id)));
+        }
+      } else {
+        await addToFavorites(Number(_id));
+        dispatch(addFavorite(track));
+        console.log('добавлен', _id);
+      }
+    } catch (err) {
+      console.error('Ошибка при обновлении избранного:', err);
     }
   };
 
@@ -76,7 +95,7 @@ export default function TrackItem({ track }: TrackProps) {
           className={cn(styles.track__time, {
             [styles.track__like_active]: isFavorite,
           })}
-          onClick={handleLickeClick}
+          onClick={handleLikeClick}
         >
           <svg className={styles.track__timeSvg}>
             <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>

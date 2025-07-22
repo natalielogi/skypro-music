@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { BASE_URL } from './constants';
-import { error } from 'console';
 import { accessTokenType } from '@/sharedTypes/types';
 import { refreshToken } from './auth/authApi';
 

@@ -27,6 +27,8 @@ export default function Bar() {
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
   const isShuffle = useAppSelector((state) => state.tracks.isShuffle);
   const isRepeat = useAppSelector((state) => state.tracks.isRepeat);
+  const favorites = useAppSelector((state) => state.favorites.favorites);
+  const isFavorite = favorites.some((fav) => fav._id === currentTrack?._id);
 
   useEffect(() => {
     if (audioRef.current && currentTrack?.track_file) {
@@ -199,14 +201,21 @@ export default function Bar() {
                   <div
                     className={cn(styles.player__btnShuffle, styles.btnIcon)}
                   >
-                    <svg className={styles.trackPlay__likeSvg}>
+                    <svg
+                      className={cn(styles.trackPlay__likeSvg, {
+                        [styles.track__like_active]: isFavorite,
+                      })}
+                    >
                       <use xlinkHref="/img/icon/sprite.svg#icon-like"></use>
                     </svg>
                   </div>
                   <div
                     className={cn(styles.trackPlay__dislike, styles.btnIcon)}
                   >
-                    <svg className={styles.trackPlay__dislikeSvg}>
+                    <svg
+                      className={styles.trackPlay__dislikeSvg}
+                      style={{ display: 'none' }}
+                    >
                       <use xlinkHref="/img/icon/sprite.svg#icon-dislike"></use>
                     </svg>
                   </div>

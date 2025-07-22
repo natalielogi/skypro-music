@@ -95,3 +95,9 @@ export type refreshTokenType = {
 };
 
 export type tokensType = accessTokenType & refreshTokenType;
+
+export type CenterblockProps = Props & {
+  isLoading?: boolean;
+  hasError?: boolean;
+  isEmpty?: boolean;
+};

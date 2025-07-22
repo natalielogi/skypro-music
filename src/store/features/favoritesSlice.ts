@@ -1,6 +1,5 @@
 import { TrackType } from '@/sharedTypes/types';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { stat } from 'fs';
 
 interface FavoritesState {
   favorites: TrackType[];
