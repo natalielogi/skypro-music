@@ -189,6 +189,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  cursor: pointer;
 }
 
 .track__timeSvg {
@@ -196,6 +197,9 @@
   height: 12px;
   fill: transparent;
   stroke: #696969;
+  transition:
+    stroke 0.2s,
+    fill 0.2s;
 }
 
 .track__timeText {
@@ -206,6 +210,11 @@
   line-height: 24px;
   text-align: right;
   color: #696969;
+}
+
+.track__like_active .track__timeSvg {
+  stroke: rgb(182, 114, 255);
+  fill: rgb(182, 114, 255);
 }
 
 .track__dot {

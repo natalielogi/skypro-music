@@ -85,3 +85,13 @@ export type AuthState = {
   user: User | null;
   isAuth: boolean;
 };
+
+export type accessTokenType = {
+  access: string;
+};
+
+export type refreshTokenType = {
+  refresh: string;
+};
+
+export type tokensType = accessTokenType & refreshTokenType;
