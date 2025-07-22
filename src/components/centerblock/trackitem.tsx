@@ -25,12 +25,14 @@ export default function TrackItem({ track }: TrackProps) {
   const { _id, name, author, album, duration_in_seconds } = track;
 
   const dispatch = useAppDispatch();
+
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlaying = useAppSelector((state) => state.tracks.isPlaying);
   const favorites = useAppSelector((state) => state.favorites.favorites);
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
 
   const isActive = currentTrack?._id === _id;
-  const isFavorite = favorites.some((fav) => fav._id === _id);
+  const isFavorite = isAuth && favorites.some((fav) => fav._id === _id);
 
   const handleClick = () => {
     dispatch(setCurrentTrack(track));
@@ -39,6 +41,11 @@ export default function TrackItem({ track }: TrackProps) {
 
   const handleLikeClick = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+
+    if (!isAuth) {
+      alert('Чтобы добавить трек в избранное, войдите в аккаунт');
+      return;
+    }
 
     try {
       if (isFavorite) {

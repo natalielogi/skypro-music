@@ -12,21 +12,24 @@ export default function Sidebar() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { isAuth } = useAppSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
-    router.push('/auth/signin');
+    router.push('/');
   };
 
   return (
     <div className={styles.main__sidebar}>
       <div className={styles.sidebar__personal}>
         <p className={styles.sidebar__personalName}>{username || 'Гость'}</p>
-        <div className={styles.sidebar__icon} onClick={handleLogout}>
-          <svg>
-            <use xlinkHref="/img/icon/sprite.svg#logout"></use>
-          </svg>
-        </div>
+        {isAuth && (
+          <div className={styles.sidebar__icon} onClick={handleLogout}>
+            <svg>
+              <use xlinkHref="/img/icon/sprite.svg#logout"></use>
+            </svg>
+          </div>
+        )}
       </div>
       <div className={styles.sidebar__block}>
         <div className={styles.sidebar__list}>

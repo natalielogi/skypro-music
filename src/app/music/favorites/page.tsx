@@ -17,7 +17,6 @@ export default function FavoritesPage() {
     const fetchFavorites = async () => {
       try {
         const response = await getFavorites();
-        console.log('favorites response:', response.data);
         dispatch(setFavorites(response.data.data));
         dispatch(setPlayList(response.data.data));
         setIsLoading(false);

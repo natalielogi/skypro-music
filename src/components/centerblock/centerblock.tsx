@@ -21,15 +21,7 @@ export default function Centerblock({
           У вас пока нет любимых треков
         </p>
       ) : (
-        <div
-          style={{
-            maxHeight: 'calc(100vh - 180px)',
-            overflowY: 'auto',
-            paddingRight: '8px',
-          }}
-        >
-          <TrackList />
-        </div>
+        <TrackList />
       )}
     </div>
   );
