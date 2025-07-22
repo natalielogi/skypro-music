@@ -16,6 +16,7 @@ import {
   addToFavorites,
   removeFromFavorites,
 } from '@/services/tracks/favoritesApi';
+import { useCallback, useMemo } from 'react';
 
 type TrackProps = {
   track: TrackType;
@@ -31,39 +32,45 @@ export default function TrackItem({ track }: TrackProps) {
   const favorites = useAppSelector((state) => state.favorites.favorites);
   const isAuth = useAppSelector((state) => state.auth.isAuth);
 
-  const isActive = currentTrack?._id === _id;
-  const isFavorite = isAuth && favorites.some((fav) => fav._id === _id);
+  const isActive = useMemo(
+    () => currentTrack?._id === _id,
+    [currentTrack?._id, _id],
+  );
+  const isFavorite = useMemo(() => {
+    return isAuth && favorites.some((fav) => fav._id === _id);
+  }, [isAuth, favorites, _id]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     dispatch(setCurrentTrack(track));
     dispatch(setIsPlaying(true));
-  };
+  }, [dispatch, track]);
 
-  const handleLikeClick = async (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+  const handleLikeClick = useCallback(
+    async (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
 
-    if (!isAuth) {
-      alert('Чтобы добавить трек в избранное, войдите в аккаунт');
-      return;
-    }
-
-    try {
-      if (isFavorite) {
-        await removeFromFavorites(Number(_id));
-        dispatch(removeFavorite(Number(_id)));
-        console.log('удалён', _id);
-        if (window.location.pathname === '/music/favorites') {
-          dispatch(removeFromPlaylist(Number(_id)));
-        }
-      } else {
-        await addToFavorites(Number(_id));
-        dispatch(addFavorite(track));
-        console.log('добавлен', _id);
+      if (!isAuth) {
+        alert('Чтобы добавить трек в избранное, войдите в аккаунт');
+        return;
       }
-    } catch (err) {
-      console.error('Ошибка при обновлении избранного:', err);
-    }
-  };
+
+      try {
+        if (isFavorite) {
+          await removeFromFavorites(Number(_id));
+          dispatch(removeFavorite(Number(_id)));
+          if (window.location.pathname === '/music/favorites') {
+            dispatch(removeFromPlaylist(Number(_id)));
+          }
+        } else {
+          await addToFavorites(Number(_id));
+          dispatch(addFavorite(track));
+        }
+      } catch (err) {
+        console.error('Ошибка при обновлении избранного:', err);
+      }
+    },
+    [isAuth, isFavorite, _id, dispatch, track],
+  );
 
   return (
     <div className={styles.playlist__item} onClick={handleClick}>

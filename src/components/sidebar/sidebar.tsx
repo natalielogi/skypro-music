@@ -6,6 +6,7 @@ import styles from './sidebar.module.css';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import { logout } from '@/store/features/authSlice';
+import { clearFavorites } from '@/store/features/favoritesSlice';
 
 export default function Sidebar() {
   const username = useAppSelector((state) => state.auth.user?.username);
@@ -16,6 +17,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearFavorites());
     router.push('/');
   };
 

@@ -7,6 +7,7 @@ import Bar from '@/components/bar/bar';
 import styles from './layout.module.css';
 import { useAppDispatch } from '@/store/store';
 import { setUser } from '@/store/features/authSlice';
+import { fetchFavorites } from '@/store/features/favoritesSlice';
 
 interface MusicLayoutProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ export default function MusicLayout({ children }: MusicLayoutProps) {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       dispatch(setUser(JSON.parse(savedUser)));
+      dispatch(fetchFavorites());
     }
   }, [dispatch]);
 

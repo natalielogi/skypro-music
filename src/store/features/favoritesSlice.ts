@@ -1,14 +1,33 @@
+import { getFavorites } from '@/services/tracks/favoritesApi';
 import { TrackType } from '@/sharedTypes/types';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface FavoritesState {
   favorites: TrackType[];
+  isloading: boolean;
+  error: string | null;
 }
 
 const initialState: FavoritesState = {
   favorites: [],
+  isloading: false,
+  error: null,
 };
 
+export const fetchFavorites = createAsyncThunk(
+  'favorites/fetchFavorites',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getFavorites();
+      return response.data.data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Произошла неизвестная ошибка');
+    }
+  },
+);
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState,
@@ -32,6 +51,21 @@ const favoritesSlice = createSlice({
     clearFavorites(state) {
       state.favorites = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchFavorites.pending, (state) => {
+        state.isloading = true;
+        state.error = null;
+      })
+      .addCase(fetchFavorites.fulfilled, (state, action) => {
+        state.isloading = false;
+        state.favorites = action.payload;
+      })
+      .addCase(fetchFavorites.rejected, (state, action) => {
+        state.isloading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
