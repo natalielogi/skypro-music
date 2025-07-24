@@ -14,6 +14,7 @@ export default function FilterBlock({ pageTitle }: { pageTitle: string }) {
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   const searchTerm = useAppSelector((state) => state.search);
+  const filters = useAppSelector((state) => state.filters);
   const dispatch = useAppDispatch();
 
   const toggleFilter = (filter: string) => {
@@ -38,6 +39,16 @@ export default function FilterBlock({ pageTitle }: { pageTitle: string }) {
     };
   }, [activeFilter]);
 
+  const getBadgeCount = (name: string) => {
+    if (name === 'жанру') {
+      return filters.selectedGenres.length;
+    }
+    if (name === 'исполнителю') {
+      return filters.selectedAuthors.length;
+    }
+    return 0;
+  };
+
   return (
     <>
       <div className={styles.centerblock__search}>
@@ -56,23 +67,30 @@ export default function FilterBlock({ pageTitle }: { pageTitle: string }) {
       <h2 className={styles.centerblock__h2}>{pageTitle}</h2>
       <div className={styles.centerblock__filter}>
         <div className={styles.filter__title}>Искать по:</div>
-        {FILTERS.map((name) => (
-          <div
-            key={name}
-            className={cn(styles.filter__button, {
-              [styles.active]: activeFilter === name,
-            })}
-            onClick={() => toggleFilter(name)}
-            style={{ position: 'relative' }}
-          >
-            {name}
-            {activeFilter === name && (
-              <div ref={popupRef} className={styles.filter__popup}>
-                <FilterList type={name} />
-              </div>
-            )}
-          </div>
-        ))}
+        {FILTERS.map((name) => {
+          const count = getBadgeCount(name);
+
+          return (
+            <div
+              key={name}
+              className={cn(styles.filter__button, {
+                [styles.active]: activeFilter === name,
+              })}
+              onClick={() => toggleFilter(name)}
+              style={{ position: 'relative' }}
+            >
+              {name}
+
+              {count > 0 && <div className={styles.filter__badge}>{count}</div>}
+
+              {activeFilter === name && (
+                <div ref={popupRef} className={styles.filter__popup}>
+                  <FilterList type={name} />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </>
   );
