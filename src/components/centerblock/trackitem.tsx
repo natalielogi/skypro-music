@@ -87,9 +87,7 @@ export default function TrackItem({ track }: TrackProps) {
             )}
           </div>
           <div className="track__title-text">
-            <Link className={styles.track__titleLink} href="">
-              {name}
-            </Link>
+            <span className={styles.track__titleLink}>{name}</span>
           </div>
         </div>
         <div className={styles.track__author}>

@@ -3,8 +3,9 @@
 import styles from './centerblock.module.css';
 import cn from 'classnames';
 import TrackItem from './trackitem';
-import { useAppSelector } from '@/store/store';
-import { useMemo } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { useEffect, useMemo } from 'react';
+import { setFilteredPlaylist } from '@/store/features/trackSlice';
 
 type Props = {
   disableFilters?: boolean;
@@ -14,6 +15,7 @@ export default function TrackList({ disableFilters = false }: Props) {
   const playlist = useAppSelector((state) => state.tracks.currentPlaylist);
   const searchTerm = useAppSelector((state) => state.search);
   const filters = useAppSelector((state) => state.filters);
+  const dispatch = useAppDispatch();
 
   const filteredTracks = useMemo(() => {
     let tracks = playlist.filter((track) =>
@@ -50,6 +52,16 @@ export default function TrackList({ disableFilters = false }: Props) {
 
     return tracks;
   }, [playlist, searchTerm, filters, disableFilters]);
+
+  useEffect(() => {
+    if (!disableFilters) {
+      if (filteredTracks.length === playlist.length) {
+        dispatch(setFilteredPlaylist([]));
+      } else {
+        dispatch(setFilteredPlaylist(filteredTracks));
+      }
+    }
+  }, [filteredTracks, playlist.length, disableFilters, dispatch]);
 
   return (
     <div className={styles.centerblock__content}>

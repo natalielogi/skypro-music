@@ -5,6 +5,7 @@ type initialStateType = {
   currentTrack: TrackType | null;
   isPlaying: boolean;
   currentPlaylist: TrackType[];
+  filteredPlaylist: TrackType[];
   shuffledPlaylist: TrackType[];
   playHistory: TrackType[];
   isShuffle: boolean;
@@ -17,6 +18,7 @@ const initialState: initialStateType = {
   currentTrack: null,
   isPlaying: false,
   currentPlaylist: [],
+  filteredPlaylist: [],
   shuffledPlaylist: [],
   playHistory: [],
   isShuffle: false,
@@ -51,11 +53,12 @@ const trackSlice = createSlice({
       state.isShuffle = !state.isShuffle;
     },
     setNextTrack: (state) => {
-      const playlist = state.isShuffle
-        ? state.shuffledPlaylist
-        : state.currentPlaylist;
+      const basePlaylist =
+        state.filteredPlaylist.length > 0
+          ? state.filteredPlaylist
+          : state.currentPlaylist;
 
-      const currentIndex = playlist.findIndex(
+      const currentIndex = basePlaylist.findIndex(
         (track) => Number(track._id) === Number(state.currentTrack?._id),
       );
 
@@ -69,16 +72,16 @@ const trackSlice = createSlice({
 
       state.isUserTriggered = false;
 
-      if (currentIndex === -1 && playlist.length > 0) {
-        state.currentTrack = playlist[0];
+      if (currentIndex === -1 && basePlaylist.length > 0) {
+        state.currentTrack = basePlaylist[0];
         return;
       }
 
-      if (!state.isShuffle && currentIndex < playlist.length - 1) {
-        state.currentTrack = playlist[currentIndex + 1];
-      } else if (state.isShuffle && currentIndex < playlist.length - 1) {
+      if (!state.isShuffle && currentIndex < basePlaylist.length - 1) {
+        state.currentTrack = basePlaylist[currentIndex + 1];
+      } else if (state.isShuffle && currentIndex < basePlaylist.length - 1) {
         state.playHistory.push(state.currentTrack!);
-        state.currentTrack = playlist[currentIndex + 1];
+        state.currentTrack = basePlaylist[currentIndex + 1];
       } else if (state.isShuffle) {
         const newShuffled = [...state.currentPlaylist].sort(
           () => Math.random() - 0.5,
@@ -89,6 +92,11 @@ const trackSlice = createSlice({
       }
     },
     setPreviousTrack: (state) => {
+      const playlist =
+        state.filteredPlaylist.length > 0
+          ? state.filteredPlaylist
+          : state.currentPlaylist;
+
       if (state.isShuffle) {
         if (state.playHistory.length > 0) {
           state.futureTrack = state.currentTrack;
@@ -97,13 +105,13 @@ const trackSlice = createSlice({
           state.isPlaying = true;
         }
       } else {
-        const currentIndex = state.currentPlaylist.findIndex(
+        const currentIndex = playlist.findIndex(
           (track) => Number(track._id) === Number(state.currentTrack?._id),
         );
 
         if (currentIndex > 0) {
           state.futureTrack = state.currentTrack;
-          state.currentTrack = state.currentPlaylist[currentIndex - 1];
+          state.currentTrack = playlist[currentIndex - 1];
           state.isPlaying = true;
         }
       }
@@ -118,6 +126,9 @@ const trackSlice = createSlice({
         (track) => Number(track._id) !== action.payload,
       );
     },
+    setFilteredPlaylist: (state, action: PayloadAction<TrackType[]>) => {
+      state.filteredPlaylist = action.payload;
+    },
   },
 });
 
@@ -130,5 +141,6 @@ export const {
   setPreviousTrack,
   togglerepeat,
   removeFromPlaylist,
+  setFilteredPlaylist,
 } = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;
