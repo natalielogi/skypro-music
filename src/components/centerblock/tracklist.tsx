@@ -4,9 +4,17 @@ import styles from './centerblock.module.css';
 import cn from 'classnames';
 import TrackItem from './trackitem';
 import { useAppSelector } from '@/store/store';
+import { useMemo } from 'react';
 
 export default function TrackList() {
   const playlist = useAppSelector((state) => state.tracks.currentPlaylist);
+  const searchTerm = useAppSelector((state) => state.search);
+
+  const filteredTracks = useMemo(() => {
+    return playlist.filter((track) =>
+      track.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [playlist, searchTerm]);
 
   return (
     <div className={styles.centerblock__content}>
@@ -25,7 +33,7 @@ export default function TrackList() {
         </div>
       </div>
       <div className={styles.content__playlist}>
-        {playlist.map((track) => {
+        {filteredTracks.map((track) => {
           return <TrackItem key={track._id} track={track} />;
         })}
       </div>

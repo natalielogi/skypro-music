@@ -3,6 +3,7 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { trackSliceReducer } from '@/store/features/trackSlice';
 import authSlice from './features/authSlice';
 import favoritesSlice from './features/favoritesSlice';
+import searchSlice from './features/searchSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -10,6 +11,7 @@ export const makeStore = () => {
       tracks: trackSliceReducer,
       auth: authSlice,
       favorites: favoritesSlice,
+      search: searchSlice,
     }),
   });
 };
