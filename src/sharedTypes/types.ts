@@ -100,4 +100,5 @@ export type CenterblockProps = Props & {
   isLoading?: boolean;
   hasError?: boolean;
   isEmpty?: boolean;
+  disableFilters?: boolean;
 };

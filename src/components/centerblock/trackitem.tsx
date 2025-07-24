@@ -40,37 +40,34 @@ export default function TrackItem({ track }: TrackProps) {
     return isAuth && favorites.some((fav) => fav._id === _id);
   }, [isAuth, favorites, _id]);
 
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     dispatch(setCurrentTrack(track));
     dispatch(setIsPlaying(true));
-  }, [dispatch, track]);
+  };
 
-  const handleLikeClick = useCallback(
-    async (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation();
+  const handleLikeClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
 
-      if (!isAuth) {
-        alert('Чтобы добавить трек в избранное, войдите в аккаунт');
-        return;
-      }
+    if (!isAuth) {
+      alert('Чтобы добавить трек в избранное, войдите в аккаунт');
+      return;
+    }
 
-      try {
-        if (isFavorite) {
-          await removeFromFavorites(Number(_id));
-          dispatch(removeFavorite(Number(_id)));
-          if (window.location.pathname === '/music/favorites') {
-            dispatch(removeFromPlaylist(Number(_id)));
-          }
-        } else {
-          await addToFavorites(Number(_id));
-          dispatch(addFavorite(track));
+    try {
+      if (isFavorite) {
+        await removeFromFavorites(Number(_id));
+        dispatch(removeFavorite(Number(_id)));
+        if (window.location.pathname === '/music/favorites') {
+          dispatch(removeFromPlaylist(Number(_id)));
         }
-      } catch (err) {
-        console.error('Ошибка при обновлении избранного:', err);
+      } else {
+        await addToFavorites(Number(_id));
+        dispatch(addFavorite(track));
       }
-    },
-    [isAuth, isFavorite, _id, dispatch, track],
-  );
+    } catch (err) {
+      console.error('Ошибка при обновлении избранного:', err);
+    }
+  };
 
   return (
     <div className={styles.playlist__item} onClick={handleClick}>
@@ -90,9 +87,7 @@ export default function TrackItem({ track }: TrackProps) {
             )}
           </div>
           <div className="track__title-text">
-            <Link className={styles.track__titleLink} href="">
-              {name}
-            </Link>
+            <span className={styles.track__titleLink}>{name}</span>
           </div>
         </div>
         <div className={styles.track__author}>

@@ -77,6 +77,8 @@ export default function Bar() {
     }
   }, [volume]);
 
+  if (!currentTrack) return null;
+
   return (
     <>
       {' '}
