@@ -113,6 +113,11 @@ const trackSlice = createSlice({
     togglerepeat: (state) => {
       state.isRepeat = !state.isRepeat;
     },
+    removeFromPlaylist(state, action: PayloadAction<number>) {
+      state.currentPlaylist = state.currentPlaylist.filter(
+        (track) => Number(track._id) !== action.payload,
+      );
+    },
   },
 });
 
@@ -124,5 +129,6 @@ export const {
   setNextTrack,
   setPreviousTrack,
   togglerepeat,
+  removeFromPlaylist,
 } = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;

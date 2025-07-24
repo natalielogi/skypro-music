@@ -4,12 +4,25 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './navigation.module.css';
 import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { logout } from '@/store/features/authSlice';
+import { useRouter } from 'next/navigation';
+import { clearFavorites } from '@/store/features/favoritesSlice';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAppSelector((state) => state.auth);
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(clearFavorites());
+    router.push('/');
   };
 
   return (
@@ -38,15 +51,30 @@ export default function Navigation() {
               Главное
             </Link>
           </li>
+          {isAuth && (
+            <li className={styles.menu__item}>
+              <Link href="/music/favorites" className={styles.menu__link}>
+                Мои треки
+              </Link>
+            </li>
+          )}
           <li className={styles.menu__item}>
-            <Link href="/music/category/mytracks" className={styles.menu__link}>
-              Мои треки
-            </Link>
-          </li>
-          <li className={styles.menu__item}>
-            <Link href="../signin.html" className={styles.menu__link}>
-              Войти
-            </Link>
+            {isAuth ? (
+              <Link
+                href="/"
+                className={styles.menu__link}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogout();
+                }}
+              >
+                Выйти
+              </Link>
+            ) : (
+              <Link href="/auth/signin" className={styles.menu__link}>
+                Войти
+              </Link>
+            )}
           </li>
         </ul>
       </div>

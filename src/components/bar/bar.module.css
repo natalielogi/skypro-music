@@ -256,6 +256,14 @@
   height: 12px;
   fill: transparent;
   stroke: #696969;
+  transition:
+    stroke 0.2s,
+    fill 0.2s;
+}
+
+.trackPlay__likeSvg.track__like_active {
+  stroke: rgb(182, 114, 255);
+  fill: rgb(182, 114, 255);
 }
 
 .trackPlay__dislikeSvg {

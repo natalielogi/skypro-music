@@ -6,27 +6,32 @@ import styles from './sidebar.module.css';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import { logout } from '@/store/features/authSlice';
+import { clearFavorites } from '@/store/features/favoritesSlice';
 
 export default function Sidebar() {
   const username = useAppSelector((state) => state.auth.user?.username);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { isAuth } = useAppSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
-    router.push('/auth/signin');
+    dispatch(clearFavorites());
+    router.push('/');
   };
 
   return (
     <div className={styles.main__sidebar}>
       <div className={styles.sidebar__personal}>
         <p className={styles.sidebar__personalName}>{username || 'Гость'}</p>
-        <div className={styles.sidebar__icon} onClick={handleLogout}>
-          <svg>
-            <use xlinkHref="/img/icon/sprite.svg#logout"></use>
-          </svg>
-        </div>
+        {isAuth && (
+          <div className={styles.sidebar__icon} onClick={handleLogout}>
+            <svg>
+              <use xlinkHref="/img/icon/sprite.svg#logout"></use>
+            </svg>
+          </div>
+        )}
       </div>
       <div className={styles.sidebar__block}>
         <div className={styles.sidebar__list}>

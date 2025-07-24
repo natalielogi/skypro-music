@@ -1,17 +1,13 @@
 import styles from './centerblock.module.css';
 import FilterBlock from '../filter/filterblock';
 import TrackList from './tracklist';
-import { Props } from '@/sharedTypes/types';
-
-type CenterblockProps = Props & {
-  isLoading?: boolean;
-  hasError?: boolean;
-};
+import { CenterblockProps } from '@/sharedTypes/types';
 
 export default function Centerblock({
   pageTitle = 'Треки',
   isLoading = false,
   hasError = false,
+  isEmpty = false,
 }: CenterblockProps) {
   return (
     <div className={styles.centerblock}>
@@ -20,6 +16,10 @@ export default function Centerblock({
         <p className={styles.centerblock__message}>Загрузка треков...</p>
       ) : hasError ? (
         <p className={styles.centerblock__message}>Ошибка загрузки треков</p>
+      ) : isEmpty ? (
+        <p className={styles.centerblock__message}>
+          У вас пока нет любимых треков
+        </p>
       ) : (
         <TrackList />
       )}

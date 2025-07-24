@@ -1,10 +1,10 @@
 'use client';
 
-import { authUser } from '@/services/auth/authApi';
+import { authUser, getTokens } from '@/services/auth/authApi';
 import styles from './signin.module.css';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { ChangeEvent, useState, MouseEvent } from 'react';
+import { ChangeEvent, useState, MouseEvent, use } from 'react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/store/store';
@@ -40,6 +40,11 @@ export default function Signin() {
       .then((user) => {
         dispatch(setUser(user));
         localStorage.setItem('user', JSON.stringify(user));
+        return getTokens({ email, password });
+      })
+      .then(({ access, refresh }) => {
+        localStorage.setItem('access', access);
+        localStorage.setItem('refresh', refresh);
         router.push('/music/main');
       })
       .catch((error) => {
