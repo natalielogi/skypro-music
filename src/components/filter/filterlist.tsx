@@ -1,6 +1,12 @@
 import styles from './filterblock.module.css';
-import { useAppSelector } from '@/store/store';
+import { useAppDispatch, useAppSelector } from '@/store/store';
 import cn from 'classnames';
+import {
+  FiltersState,
+  setSortBy,
+  toggleAuthor,
+  toggleGenre,
+} from '@/store/features/filterSlice';
 
 type Props = {
   type: string;
@@ -10,6 +16,8 @@ export default function FilterList({ type }: Props) {
   const activeValue = '';
 
   const tracks = useAppSelector((state) => state.tracks.currentPlaylist);
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.filters);
 
   let items: string[] = [];
 
@@ -29,18 +37,38 @@ export default function FilterList({ type }: Props) {
     items = ['по умолчанию', 'сначала новые', 'сначала старые'];
   }
 
+  const handleClick = (item: string) => {
+    if (type === 'исполнителю') {
+      dispatch(toggleAuthor(item));
+    } else if (type === 'жанру') {
+      dispatch(toggleGenre(item));
+    } else if (type === 'году выпуска') {
+      dispatch(setSortBy(item as FiltersState['sortBy']));
+    }
+  };
+
   return (
     <div className={styles.filter__list}>
-      {items.map((item) => (
-        <div
-          key={item}
-          className={cn(styles.filter__item, {
-            [styles['filter__item--active']]: item === activeValue,
-          })}
-        >
-          {item}
-        </div>
-      ))}
+      {items.map((item) => {
+        const isActive =
+          type === 'исполнителю'
+            ? filters.selectedAuthors.includes(item)
+            : type === 'жанру'
+              ? filters.selectedGenres.includes(item)
+              : filters.sortBy === item;
+
+        return (
+          <div
+            key={item}
+            className={cn(styles.filter__item, {
+              [styles['filter__item--active']]: isActive,
+            })}
+            onClick={() => handleClick(item)}
+          >
+            {item}
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -9,12 +9,46 @@ import { useMemo } from 'react';
 export default function TrackList() {
   const playlist = useAppSelector((state) => state.tracks.currentPlaylist);
   const searchTerm = useAppSelector((state) => state.search);
+  const filters = useAppSelector((state) => state.filters);
 
   const filteredTracks = useMemo(() => {
-    return playlist.filter((track) =>
-      track.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }, [playlist, searchTerm]);
+    let tracks = [...playlist];
+
+    if (searchTerm) {
+      tracks = tracks.filter((track) =>
+        track.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
+    }
+
+    if (filters.selectedAuthors.length > 0) {
+      tracks = tracks.filter((track) =>
+        filters.selectedAuthors.some((author) =>
+          track.author?.toLowerCase().includes(author.toLowerCase()),
+        ),
+      );
+    }
+
+    if (filters.selectedGenres.length > 0) {
+      tracks = tracks.filter((track) =>
+        track.genre.some((g) => filters.selectedGenres.includes(g)),
+      );
+    }
+
+    if (filters.sortBy !== 'по умолчанию') {
+      tracks = tracks
+        .filter((track) => !!track.release_date)
+        .sort((a, b) => {
+          const dateA = new Date(a.release_date!).getTime();
+          const dateB = new Date(b.release_date!).getTime();
+
+          return filters.sortBy === 'сначала новые'
+            ? dateB - dateA
+            : dateA - dateB;
+        });
+    }
+
+    return tracks;
+  }, [playlist, searchTerm, filters]);
 
   return (
     <div className={styles.centerblock__content}>

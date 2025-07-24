@@ -4,6 +4,7 @@ import { trackSliceReducer } from '@/store/features/trackSlice';
 import authSlice from './features/authSlice';
 import favoritesSlice from './features/favoritesSlice';
 import searchSlice from './features/searchSlice';
+import filterSlice from './features/filterSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -12,19 +13,16 @@ export const makeStore = () => {
       auth: authSlice,
       favorites: favoritesSlice,
       search: searchSlice,
+      filters: filterSlice,
     }),
   });
 };
 
-// Infer the type of makeStore
 export type AppStore = ReturnType<typeof makeStore>;
 
-// Infer the \`RootState\` and \`AppDispatch\` types from the store itself
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];
 
-// Для нового TS
-// Use throughout your app instead of plain \`useDispatch\` and \`useSelector\`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
 export const useAppStore = useStore.withTypes<AppStore>();
