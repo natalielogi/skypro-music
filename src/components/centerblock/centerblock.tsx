@@ -2,6 +2,7 @@ import styles from './centerblock.module.css';
 import FilterBlock from '../filter/filterblock';
 import TrackList from './tracklist';
 import { CenterblockProps } from '@/sharedTypes/types';
+import SkeletonTrack from '../skeletonTrack/skeleton';
 
 export default function Centerblock({
   pageTitle = 'Треки',
@@ -14,7 +15,11 @@ export default function Centerblock({
     <div className={styles.centerblock}>
       <FilterBlock pageTitle={pageTitle} />
       {isLoading ? (
-        <p className={styles.centerblock__message}>Загрузка треков...</p>
+        <div className={styles.centerblock__skeletons}>
+          {[...Array(6)].map((_, i) => (
+            <SkeletonTrack key={i} />
+          ))}
+        </div>
       ) : hasError ? (
         <p className={styles.centerblock__message}>Ошибка загрузки треков</p>
       ) : isEmpty ? (
