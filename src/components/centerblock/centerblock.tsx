@@ -8,6 +8,7 @@ export default function Centerblock({
   isLoading = false,
   hasError = false,
   isEmpty = false,
+  disableFilters = false,
 }: CenterblockProps) {
   return (
     <div className={styles.centerblock}>
@@ -21,7 +22,7 @@ export default function Centerblock({
           У вас пока нет любимых треков
         </p>
       ) : (
-        <TrackList />
+        <TrackList disableFilters={disableFilters} />
       )}
     </div>
   );
