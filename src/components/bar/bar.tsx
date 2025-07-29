@@ -95,7 +95,7 @@ export default function Bar() {
           }
         }}
       />
-      <div className={styles.bar}>
+      <div className={styles.bar} data-testid="bar">
         <div className={styles.bar__content}>
           {currentTrack && (
             <div className={styles.timeWrapper}>

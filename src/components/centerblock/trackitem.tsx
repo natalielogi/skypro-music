@@ -16,7 +16,7 @@ import {
   addToFavorites,
   removeFromFavorites,
 } from '@/services/tracks/favoritesApi';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 type TrackProps = {
   track: TrackType;
