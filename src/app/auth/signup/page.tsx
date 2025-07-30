@@ -22,29 +22,26 @@ export default function SignUp() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (!email.trim || !password.trim || !username.trim) {
+    if (!email.trim() || !password.trim() || !username.trim()) {
       return setErrorMessage('Заполните все поля');
     }
     setIsLoading(true);
 
     registerUser({ email, password, username })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         alert('Регистрация прошла успешно!');
         window.location.href = '/auth/signin';
       })
       .catch((error) => {
         if (error instanceof AxiosError) {
-          console.log(error);
-
           if (error.response) {
             const message = error.response.data.message;
             const fieldErrors = error.response.data.data?.errors;
 
             if (fieldErrors?.password) {
-              setErrorMessage(fieldErrors.password[0]); // Покажет: The password must be at least 6 characters.
+              setErrorMessage(fieldErrors.password[0]);
             } else {
-              setErrorMessage(message); // Общее сообщение
+              setErrorMessage(message);
             }
           } else if (error.request) {
             setErrorMessage('Проверьте интернет-соединение и попробуйте позже');
