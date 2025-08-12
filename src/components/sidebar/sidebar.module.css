@@ -78,3 +78,10 @@
   width: 100%;
   height: 100%;
 }
+
+.sidebar__imgSkeleton {
+  width: 250px;
+  height: 170px;
+  border-radius: 12px;
+  background-color: rgb(49, 49, 49);
+}

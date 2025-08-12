@@ -125,3 +125,19 @@
   color: rgb(182, 114, 255);
   text-decoration: underline;
 }
+
+.filter__badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 26px;
+  height: 25.5px;
+  background: rgb(173, 97, 255);
+  color: rgb(255, 255, 255);
+  font-family: StratosSkyeng, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 25.5px;
+  border-radius: 50%;
+  text-align: center;
+}

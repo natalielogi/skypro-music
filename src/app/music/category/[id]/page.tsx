@@ -68,6 +68,7 @@ export default function CategoryPage() {
       pageTitle={pageTitle}
       isLoading={isLoading}
       hasError={hasError}
+      disableFilters={true}
     />
   );
 }
